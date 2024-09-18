@@ -15,3 +15,20 @@
   top: 0;
   z-index: 1;
 }
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between; // Sépare les éléments (menu à gauche, boutons à droite)
+  align-items: center; // Aligne verticalement les éléments dans la toolbar
+
+  .buttonsRight {
+    margin-left: auto; // Pousse le div avec les boutons à droite
+    display: flex;
+    gap: 10px; // Ajoute un espacement entre les boutons
+  }
+  .buttonsLeft{
+    margin-left: 20px;
+    display: flex;
+    gap: 10px;
+  }
+}

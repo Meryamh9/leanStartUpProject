@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+  <!--
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
@@ -10,9 +11,11 @@
       <a mat-list-item href="#">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
+  -->
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <!-- @if (isHandset$ | async)  {-->
+       <!--
         <button
           type="button"
           aria-label="Toggle sidenav"
@@ -20,8 +23,30 @@
           (click)="drawer.toggle()">
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
-      <!-- } -->
-      <span>app</span>
+      -->
+      <span>UP'IT</span>
+      <div class="buttonsLeft">
+      <button mat-raised-button color="accent">Accueil<mat-icon>home</mat-icon>
+      </button>
+      <button mat-raised-button color="accent">Nos produits<mat-icon>store</mat-icon>
+      </button>
+      <button mat-raised-button color="accent">A propos<mat-icon>stars</mat-icon>
+
+      </button>
+      <button mat-raised-button color="accent">
+        Mettre en vente
+        <mat-icon>add</mat-icon>
+      </button>
+      
+
+      </div>
+      <div class="buttonsRight">
+      <button mat-raised-button color="accent">Inscription<mat-icon>person_add</mat-icon>
+
+      </button>
+      <button mat-raised-button color="accent">Connexion<mat-icon>account_circle</mat-icon>
+      </button>
+      </div>
     </mat-toolbar>
     <!-- Add Content Here -->
   </mat-sidenav-content>
