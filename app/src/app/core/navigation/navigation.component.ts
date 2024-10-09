@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { AccueilComponent } from "../accueil/accueil.component";
 
 @Component({
   selector: 'app-navigation',
@@ -21,7 +22,8 @@ import { map, shareReplay } from 'rxjs/operators';
     MatListModule,
     MatIconModule,
     AsyncPipe,
-  ]
+    AccueilComponent
+]
 })
 export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
