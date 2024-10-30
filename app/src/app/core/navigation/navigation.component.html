@@ -3,9 +3,9 @@
     <mat-toolbar color="primary">
       <span>UP'IT</span>
       <div class="buttonsLeft">
-        <button mat-button color="black">Accueil<mat-icon>home</mat-icon></button>
+        <button mat-button color="black" routerLink="">Accueil<mat-icon>home</mat-icon></button>
         <button mat-button color="black">Nos produits<mat-icon>store</mat-icon></button>
-        <button mat-button color="black">A propos<mat-icon>stars</mat-icon></button>
+        <button mat-button color="black" [routerLink]="['/a-propos']">A propos<mat-icon>stars</mat-icon></button>
         <button mat-raised-button color="accent">Mettre en vente
           <mat-icon>add</mat-icon></button>
 

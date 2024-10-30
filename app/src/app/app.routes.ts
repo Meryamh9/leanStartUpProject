@@ -7,9 +7,14 @@ export const routes: Routes = [
     loadChildren: () => import('./core/home/home.module').then(m => m.HomeModule)
   },
   {
+    path: 'a-propos',
+    loadChildren: () => import('./core/a-propos/a-propos.module').then(m => m.AProposModule)
+  },
+  {
     path: '**',
     redirectTo: ''  // Redirection vers la racine pour les routes non définies
-  }
+  },
+
 ];
 
 @NgModule({
