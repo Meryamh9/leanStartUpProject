@@ -6,7 +6,6 @@
     background-repeat: no-repeat; /* Empêche la répétition */
     position: relative; /* Nécessaire pour que les éléments enfants soient positionnés correctement */
     display: flex; /* Utilise flexbox */
-    flex-direction: column; /* Direction verticale */
     justify-content: space-between; /* Espace entre les éléments */
   }
   
