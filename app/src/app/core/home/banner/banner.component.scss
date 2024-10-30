@@ -1,0 +1,20 @@
+.background-container {
+    height: 100vh; /* Occupe toute la hauteur de la page */
+    background-image: url('/assets/images/cycle.jpg'); /* Chemin vers l'image */
+    background-size: cover; /* L'image couvre toute la surface */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Empêche la répétition */
+    position: relative; /* Nécessaire pour que les éléments enfants soient positionnés correctement */
+    display: flex; /* Utilise flexbox */
+    flex-direction: column; /* Direction verticale */
+    justify-content: space-between; /* Espace entre les éléments */
+  }
+  
+  .buttonsAccueil {
+    display: flex;
+    gap: 20px; /* Espace entre les boutons */
+    position: relative; /* Fixe les boutons sur l'image */
+    left: 80px; /* Positionnement horizontal */
+    top: 300px; /* Positionnement vertical */
+  }
+  

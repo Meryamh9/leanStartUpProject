@@ -9,7 +9,7 @@ import { AccueilComponent } from './core/accueil/accueil.component';
   imports: [RouterOutlet, NavigationComponent, AccueilComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]  // Si vous utilisez un Web Component
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
 export class AppComponent {
