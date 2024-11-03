@@ -17,3 +17,42 @@
     top: 300px; /* Positionnement vertical */
   }
   
+  .announcements-section {
+    text-align: left;
+    padding: 20px;
+  }
+  
+  .cards-container {
+    display: flex;
+    justify-content: center;      /* Centrer les cartes */
+    flex-wrap: wrap;              /* Permet le retour à la ligne */
+    gap: 60px;
+    padding: 0 10px;              /* Evite que les cartes touchent les bords */
+    width: 100%;
+    max-width: 1200px;            /* Limite la largeur du conteneur */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    width: 100%;                  /* Responsive */
+    max-width: 250px;             /* Largeur maximale */
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.button-annonce{
+  display: flex;
+  left: 80px; /* Positionnement horizontal */
+  top: 30px; /* Positionnement vertical */
+  justify-content: center;
+}
+
+body {
+    overflow-x: hidden;           /* Masque les débordements horizontaux */
+}
