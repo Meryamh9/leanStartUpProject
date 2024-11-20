@@ -11,6 +11,14 @@ export const routes: Routes = [
     loadChildren: () => import('./core/a-propos/a-propos.module').then(m => m.AProposModule)
   },
   {
+    path: 'connexion',
+    loadChildren: () => import('./core/connexion/connexion.module').then(m => m.ConnexionModule)
+  },
+  {
+    path: 'inscription',
+    loadChildren: () => import('./core/inscription/inscription.module').then(m => m.InscriptionModule)
+  },
+  {
     path: 'produit',
     loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
   },
