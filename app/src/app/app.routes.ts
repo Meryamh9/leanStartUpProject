@@ -11,6 +11,14 @@ export const routes: Routes = [
     loadChildren: () => import('./core/a-propos/a-propos.module').then(m => m.AProposModule)
   },
   {
+    path: 'produit',
+    loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
+  },
+  {
+    path: 'mettre-en-vente',
+    loadChildren: () => import('./sale/sale.module').then(m => m.SaleModule)
+  },
+  {
     path: '**',
     redirectTo: ''  // Redirection vers la racine pour les routes non définies
   },
