@@ -1,25 +1,19 @@
-import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HomeRoutingModule } from './home-routing.module';
+import { BannerComponent } from './banner/banner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-
-
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
-    SharedModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-  ],
-  exports: [
+    HomeRoutingModule,
+    BannerComponent,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
   ]
 })
-export class CoreModule { }
+export class HomeModule { }
