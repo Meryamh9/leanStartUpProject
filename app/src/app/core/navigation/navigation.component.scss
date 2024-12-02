@@ -1,0 +1,43 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .buttonsRight {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+  }
+  .buttonsLeft{
+    margin-left: 20px;
+    display: flex;
+    gap: 10px;
+  }
+}
+
+mat-toolbar {
+  background-color: #F2F2F2 !important; 
+  color: #495747; 
+  .mat-button, .mat-raised-button {
+    background-color: transparent !important; 
+  }
+}
+

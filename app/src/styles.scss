@@ -1,0 +1,15 @@
+@import 'theme.scss';
+
+html, body {
+  overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+}
