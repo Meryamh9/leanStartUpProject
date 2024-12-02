@@ -4,22 +4,24 @@
       <span>UP'IT</span>
       <div class="buttonsLeft">
         <button mat-button color="black" routerLink="">Accueil<mat-icon>home</mat-icon></button>
-        <button mat-button color="black">Nos produits<mat-icon>store</mat-icon></button>
+        <button mat-button color="black" [routerLink]="['/produit']">Nos produits<mat-icon>store</mat-icon></button>
         <button mat-button color="black" [routerLink]="['/a-propos']">A propos<mat-icon>stars</mat-icon></button>
-        <button mat-raised-button color="accent">Mettre en vente
+        <button mat-raised-button color="accent" [routerLink]="['/mettre-en-vente']">Mettre en vente
           <mat-icon>add</mat-icon></button>
 
 
 
       </div>
       <div class="buttonsRight">
-        <button mat-button color="black">Inscription<mat-icon>person_add</mat-icon></button>
-        <button mat-button color="black">Connexion<mat-icon>account_circle</mat-icon></button>
+        <button mat-button color="black"
+          [routerLink]="['/inscription']">Inscription<mat-icon>person_add</mat-icon></button>
+        <button mat-button color="black"
+          [routerLink]="['/connexion']">Connexion<mat-icon>account_circle</mat-icon></button>
       </div>
     </mat-toolbar>
     <!-- Add Content Here -->
     <ng-content></ng-content>
-  
-    
+
+
   </mat-sidenav-content>
 </mat-sidenav-container>
