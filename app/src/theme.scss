@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-$primary-palette: mat.define-palette((
+$primary-palette: mat.m2-define-palette((
   50: #F2F2F2,
   100: #CCE3CF,
   200: #B3D5B7,
@@ -16,7 +16,7 @@ $primary-palette: mat.define-palette((
   )
 ));
 
-$accent-palette: mat.define-palette((
+$accent-palette: mat.m2-define-palette((
   50: #FFE6CC,
   100: #FFDAB3,
   200: #FFCD99,
@@ -32,9 +32,9 @@ $accent-palette: mat.define-palette((
   )
 ));
 
-$warn-palette: mat.define-palette(mat.$red-palette);
+$warn-palette: mat.m2-define-palette(mat.$m2-red-palette);
 
-$custom-theme: mat.define-light-theme((
+$custom-theme: mat.m2-define-light-theme((
   color: (
     primary: $primary-palette,
     accent: $accent-palette,
