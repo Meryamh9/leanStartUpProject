@@ -1,0 +1,34 @@
+.card-container {
+    text-align: left;
+    padding: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+
+    .example-card {
+        width: 300px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+        img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        mat-card-content {
+            text-align: center;
+
+            h2 {
+                font-size: 1.2rem;
+                margin: 8px 0;
+            }
+
+            .price {
+                font-weight: bold;
+                font-size: 1.4rem;
+            }
+        }
+    }
+}
