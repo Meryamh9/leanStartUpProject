@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { SupabaseService } from '../../../supabase.service'
 
 @Component({
   selector: 'app-banner',
@@ -16,14 +17,23 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   templateUrl: './banner.component.html',
-  styleUrl: './banner.component.scss'
+  styleUrls: ['./banner.component.scss']
 })
-export class BannerComponent {
-  cards = [
-    { title: 'Carte 1', content: 'Contenu de la carte 1' },
-    { title: 'Carte 2', content: 'Contenu de la carte 2' },
-    { title: 'Carte 3', content: 'Contenu de la carte 3' }
-  ];
-  
+export class BannerComponent implements OnInit {
+  latestAds: any[] = []; // Tableau pour stocker les annonces
 
+  constructor(private supabaseService: SupabaseService) {}
+
+  ngOnInit(): void {
+    this.loadLatestAds();
+  }
+
+  async loadLatestAds() {
+    try {
+      this.latestAds = await this.supabaseService.getLatestAds(3); // Récupère 3 annonces
+      console.log('Dernières annonces chargées dans le BannerComponent :', this.latestAds);
+    } catch (error) {
+      console.error('Erreur lors du chargement des dernières annonces :', error);
+    }
+  }
 }
