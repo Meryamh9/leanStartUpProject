@@ -31,4 +31,16 @@ export class SupabaseService {
     return data;
   }
 
+  async getAd() {
+    const { data, error } = await this.supabase
+      .from('Ad')
+      .select('*');
+    if (error) {
+      console.error('Erreur lors de la récupération des données :', error);
+    } else {
+      console.log('Données récupérées :', data);
+    }
+    return data;
+  }
+
 }

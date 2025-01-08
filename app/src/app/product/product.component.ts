@@ -1,22 +1,40 @@
+// product.component.ts
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { SupabaseService } from '../supabase.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   imports: [CommonModule, MatCardModule],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.scss'
+  styleUrls: ['./product.component.scss']
 })
-export class ProductComponent {
-  cards = [
-    { title: 'Lot de palettes', location: 'Bordeaux 33000', price: 55, image: 'assets/images/cycle1.jpg' },
-    { title: 'Canapé', location: 'Lille 59800', price: 20, image: 'assets/images/canape.jpg' },
-    { title: 'Table', location: 'Paris 75000', price: 9, image: 'assets/images/table.jpg' },
-    { title: 'Table de salle à manger', location: 'Nantes 44000', price: 80, image: 'assets/images/salle-manger.jpg' },
-    { title: 'Lot de tables', location: 'Marseille 13000', price: 100, image: 'assets/images/lot-tables.jpg' },
-    { title: 'Chevet', location: 'Lyon 69000', price: 15, image: 'assets/images/chevet.jpg' },
-  ];
+export class ProductComponent implements OnInit {
+  cards: any[] = [];
 
+  constructor(private supabaseService: SupabaseService) {}
+
+  ngOnInit(): void {
+    this.loadAds();
+  }
+
+  async loadAds() {
+    try {
+      const ads = await this.supabaseService.getAd();
+
+      // On mappe les données de "Ad" pour correspondre
+      // @ts-ignore
+      this.cards = ads.map((ad: any) => ({
+        title: ad.title,
+        location: ad.location,
+        price: ad.price,
+        image: ad.images,
+      }));
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits :', error);
+    }
+  }
 }
