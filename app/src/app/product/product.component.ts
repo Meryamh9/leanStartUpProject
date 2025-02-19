@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { SupabaseService } from '../supabase.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, MatIcon],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
