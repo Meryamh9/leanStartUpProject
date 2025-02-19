@@ -28,6 +28,10 @@ export const routes: Routes = [
     loadChildren: () => import('./sale/sale.module').then(m => m.SaleModule)
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./core/user/profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
     path: '**',
     redirectTo: ''  // Redirection vers la racine pour les routes non définies
   },

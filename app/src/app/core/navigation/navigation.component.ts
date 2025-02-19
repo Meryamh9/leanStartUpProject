@@ -1,37 +1,49 @@
-import { Component, inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { SupabaseService } from '../../supabase.service';
+import { CommonModule } from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-navigation',
-  templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.scss',
   standalone: true,
   imports: [
+    CommonModule,
     MatToolbarModule,
     MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
     MatIconModule,
-    AsyncPipe,
-    RouterOutlet,
-    RouterModule
-]
+    MatMenuModule,
+    MatSidenavContent,
+    MatSidenavContainer,
+    RouterLink
+  ],
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.scss'],
 })
-export class NavigationComponent {
-  private breakpointObserver = inject(BreakpointObserver);
+export class NavigationComponent implements OnInit {
+  user: any = null;
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
+  constructor(private supabaseService: SupabaseService, private router: Router) {}
+
+  async ngOnInit(): Promise<void> {
+    // Récupère l'utilisateur connecté au démarrage
+    this.user = await this.supabaseService.getUser();
+    // Écoute les changements d'état d'authentification
+    this.supabaseService.onAuthStateChange((event: string, session: any) => {
+      this.user = session?.user || null;
+    });
+  }
+
+  async logout() {
+    try {
+      await this.supabaseService.signOut();
+      this.router.navigate(['/connexion']); // ou '/login' selon votre routing
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
+  }
 }
