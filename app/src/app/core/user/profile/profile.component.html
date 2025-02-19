@@ -1,0 +1,39 @@
+<div class="profile-container" *ngIf="!loading; else loadingTemplate">
+    <h1>Mon Profil</h1>
+
+    <div class="messages">
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    </div>
+
+    <!-- Formulaire de mise à jour des informations -->
+    <form (ngSubmit)="updateProfile()">
+        <div class="form-group">
+            <label>Email :</label>
+            <input type="email" [value]="email" readonly>
+        </div>
+        <div class="form-group">
+            <label>Nom :</label>
+            <input type="text" [(ngModel)]="name" name="name">
+        </div>
+        <div class="form-group">
+            <label>Adresse :</label>
+            <input type="text" [(ngModel)]="address" name="address">
+        </div>
+        <div class="form-group">
+            <label>Téléphone :</label>
+            <input type="text" [(ngModel)]="phone" name="phone">
+        </div>
+        <div class="form-group">
+            <label>Image de profil :</label>
+            <input type="file" (change)="onFileSelected($event)">
+        </div>
+        <button type="submit" class="btn">Mettre à jour le profil</button>
+    </form>
+
+    <hr>
+</div>
+
+<ng-template #loadingTemplate>
+    <p>Chargement...</p>
+</ng-template>
