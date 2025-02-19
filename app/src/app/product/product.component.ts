@@ -1,12 +1,40 @@
-import { Component } from '@angular/core';
+// product.component.ts
+
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { SupabaseService } from '../supabase.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.scss'
+  styleUrls: ['./product.component.scss']
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
+  cards: any[] = [];
 
+  constructor(private supabaseService: SupabaseService) {}
+
+  ngOnInit(): void {
+    this.loadAds();
+  }
+
+  async loadAds() {
+    try {
+      const ads = await this.supabaseService.getAd();
+
+      // On mappe les données de "Ad" pour correspondre
+      // @ts-ignore
+      this.cards = ads.map((ad: any) => ({
+        title: ad.title,
+        location: ad.location,
+        price: ad.price,
+        image: ad.images,
+      }));
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits :', error);
+    }
+  }
 }

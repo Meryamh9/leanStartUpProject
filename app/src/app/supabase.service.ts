@@ -31,4 +31,32 @@ export class SupabaseService {
     return data;
   }
 
+  async getAd() {
+    const { data, error } = await this.supabase
+      .from('Ad')
+      .select('*');
+    if (error) {
+      console.error('Erreur lors de la récupération des données :', error);
+    } else {
+      console.log('Données récupérées :', data);
+    }
+    return data;
+  }
+
+  async getLatestAds(limit: number = 3) {
+    const { data, error } = await this.supabase
+      .from('Ad')        // Nom de la table
+      .select('*')       // Sélectionne toutes les colonnes
+      .order('publication_date', { ascending: false }) // Trie par date de publication, les plus récentes d'abord
+      .limit(limit);     // Limite à 3 résultats
+
+    if (error) {
+      console.error('Erreur lors de la récupération des dernières annonces :', error.message);
+      throw new Error(error.message);
+    }
+
+    console.log('Dernières annonces récupérées :', data);
+    return data;
+  }
+
 }
