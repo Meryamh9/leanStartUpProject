@@ -7,8 +7,8 @@
     <button mat-raised-button color="primary" [routerLink]="['/produit']">
       Découvrez nos produits<mat-icon>arrow_forward</mat-icon>
     </button>
-    <button mat-raised-button color="accent" [routerLink]="['/mettre-en-vente']">
-      Mettre en vente<mat-icon>add</mat-icon>
+    <button mat-raised-button color="accent" (click)="navigateToSale()">
+      Mettre en vente <mat-icon>add</mat-icon>
     </button>
   </div>
 </div>

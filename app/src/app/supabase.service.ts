@@ -137,6 +137,9 @@ export class SupabaseService {
     return await this.updateUserProfile(userId, profileData);
   }
 
+  get client(): SupabaseClient {
+    return this.supabase;
+  }
 
 // Met à jour le mot de passe de l'utilisateur via l'API Auth de Supabase
 //   async updateUserPassword(newPassword: string) {
