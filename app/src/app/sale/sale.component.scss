@@ -48,14 +48,73 @@ button:disabled {
 }
 
 .sale-container {
-  position: relative;
-  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-  .slide-in-right {
-    animation: slideInRight 0.5s ease-in-out;
+  .photos-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    margin-top: 10px;
+
+    .photo-tile {
+      position: relative;
+      width: 100%;
+      padding-top: 100%; /* Carré */
+      background: #eefbe4;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .plus-sign {
+        font-size: 2rem;
+        color: #666;
+      }
+
+      .remove-button {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: #ff4c4c;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+    }
   }
 }
 
+/* Anim slide-in-right existante */
+.slide-in-right {
+  animation: slideInRight 0.5s ease-in-out;
+}
 @keyframes slideInRight {
   from {
     opacity: 0;
