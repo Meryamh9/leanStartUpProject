@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../environments/environment';
+import {Injectable} from '@angular/core';
+import {createClient, SupabaseClient} from '@supabase/supabase-js';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class SupabaseService {
 
   // Méthode pour se connecter via email et mot de passe
   async signIn(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+    const {data, error} = await this.supabase.auth.signInWithPassword({email, password});
     if (error) {
       throw new Error(error.message);
     }
@@ -23,7 +23,7 @@ export class SupabaseService {
 
   // Méthode pour inscrire un utilisateur avec email et mot de passe
   async signUp(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signUp({ email, password });
+    const {data, error} = await this.supabase.auth.signUp({email, password});
     if (error) {
       console.error('Erreur lors de l\'inscription :', error.message);
       throw new Error(error.message);
@@ -32,7 +32,7 @@ export class SupabaseService {
   }
 
   async getAd() {
-    const { data, error } = await this.supabase
+    const {data, error} = await this.supabase
       .from('Ad')
       .select('*');
     if (error) {
@@ -44,10 +44,10 @@ export class SupabaseService {
   }
 
   async getLatestAds(limit: number = 3) {
-    const { data, error } = await this.supabase
+    const {data, error} = await this.supabase
       .from('Ad')        // Nom de la table
       .select('*')       // Sélectionne toutes les colonnes
-      .order('publication_date', { ascending: false }) // Trie par date de publication, les plus récentes d'abord
+      .order('publication_date', {ascending: false}) // Trie par date de publication, les plus récentes d'abord
       .limit(limit);     // Limite à 3 résultats
 
     if (error) {
@@ -61,7 +61,7 @@ export class SupabaseService {
 
   // Récupère l'utilisateur connecté
   async getUser() {
-    const { data: { user }, error } = await this.supabase.auth.getUser();
+    const {data: {user}, error} = await this.supabase.auth.getUser();
     if (error) {
       console.error('Erreur lors de la récupération de l\'utilisateur :', error.message);
       return null;
@@ -76,14 +76,14 @@ export class SupabaseService {
 
   // Permet de se déconnecter
   async signOut() {
-    const { error } = await this.supabase.auth.signOut();
+    const {error} = await this.supabase.auth.signOut();
     if (error) {
       throw new Error(error.message);
     }
   }
 
   async getUserProfile(userId: string) {
-    const { data, error } = await this.supabase
+    const {data, error} = await this.supabase
       .from('userprofile')
       .select('*')
       .eq('user_id', userId)
@@ -97,7 +97,7 @@ export class SupabaseService {
 
   // Met à jour les informations du profil dans la table "userprofile"
   async updateUserProfile(userId: string, profileData: any) {
-    const { data, error } = await this.supabase
+    const {data, error} = await this.supabase
       .from('userprofile')
       .update(profileData)
       .eq('user_id', userId);
@@ -113,16 +113,16 @@ export class SupabaseService {
     if (file) {
       // Définir un chemin unique pour le fichier dans le bucket
       const filePath = `profile/${userId}-${Date.now()}-${file.name}`;
-      const { data: uploadData, error: uploadError } = await this.supabase
+      const {data: uploadData, error: uploadError} = await this.supabase
         .storage
         .from('ad-images')
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, file, {upsert: true});
       if (uploadError) {
         console.error("Erreur lors de l'upload de l'image :", uploadError.message);
         throw new Error(uploadError.message);
       }
       // Récupérer l'URL publique de l'image uploadée
-      const { data: publicUrlData } = this.supabase
+      const {data: publicUrlData} = this.supabase
         .storage
         .from('ad-images')
         .getPublicUrl(filePath);
@@ -131,7 +131,7 @@ export class SupabaseService {
         throw new Error("Impossible de récupérer l'URL publique de l'image.");
       }
       // Ajouter l'URL de l'image aux données de profil
-      profileData = { ...profileData, avatar_url: publicUrl };
+      profileData = {...profileData, avatar_url: publicUrl};
     }
     // Mettre à jour le profil dans la table userprofile
     return await this.updateUserProfile(userId, profileData);
