@@ -1,5 +1,5 @@
 <div class="card-container">
-  <mat-card *ngFor="let card of dataSource.connect() | async" class="example-card">
+  <mat-card *ngFor="let card of dataSource.connect() | async" class="example-card" [routerLink]="['/produit', 'product-detail', card.id]">
     <img mat-card-image [src]="card.image" [alt]="card.title" />
     <mat-card-content>
       <mat-card-header>

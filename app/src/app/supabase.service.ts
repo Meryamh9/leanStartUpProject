@@ -95,7 +95,7 @@ export class SupabaseService {
     return data;
   }
 
-// Met à jour les informations du profil dans la table "userprofile"
+  // Met à jour les informations du profil dans la table "userprofile"
   async updateUserProfile(userId: string, profileData: any) {
     const { data, error } = await this.supabase
       .from('userprofile')
@@ -108,7 +108,7 @@ export class SupabaseService {
     return data;
   }
 
-// Fonction qui upload une image (si fournie) puis met à jour le profil avec l'URL de l'image
+  // Fonction qui upload une image (si fournie) puis met à jour le profil avec l'URL de l'image
   async updateProfileWithImage(userId: string, profileData: any, file?: File) {
     if (file) {
       // Définir un chemin unique pour le fichier dans le bucket
@@ -138,12 +138,44 @@ export class SupabaseService {
   }
 
 
-// Met à jour le mot de passe de l'utilisateur via l'API Auth de Supabase
-//   async updateUserPassword(newPassword: string) {
-//     const { data, error } = await this.supabase.auth.updateUser({ password: newPassword });
-//     if (error) {
-//       throw new Error(error.message);
-//     }
-//     return data;
-//   }
+  // Met à jour le mot de passe de l'utilisateur via l'API Auth de Supabase
+  //   async updateUserPassword(newPassword: string) {
+  //     const { data, error } = await this.supabase.auth.updateUser({ password: newPassword });
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
+  //     return data;
+  //   }
+
+
+  async getProductById(productId: string) {
+    const user = await this.getUser();
+
+    if (!user) {
+      console.error("Utilisateur non connecté");
+      return null;
+    }
+
+    const userId = user.id;
+    if (!userId) {
+      console.error("ID utilisateur non disponible");
+      return null;
+    }
+
+    const { data, error } = await this.supabase
+      .from('Ad')
+      .select('*')
+      .eq('user_id', userId) 
+      .single();
+
+    if (error) {
+      console.error("Erreur lors de la récupération du produit :", error.message);
+      return null;
+    }
+
+    return data;
+  }
+
+
 }
+

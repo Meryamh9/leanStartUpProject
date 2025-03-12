@@ -5,12 +5,13 @@ import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle }
 import { MatIcon } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   standalone: true,
-  imports: [MatCardTitle, MatCard, MatCardContent, MatCardHeader, MatPaginator, MatCardSubtitle, MatIcon, CommonModule],
+  imports: [MatCardTitle, MatCard, MatCardContent, MatCardHeader, MatPaginator, MatCardSubtitle, MatIcon, CommonModule, RouterModule],
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
