@@ -13,19 +13,21 @@ import { SupabaseService } from '../supabase.service';
 export class SaleComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
+  // Formulaire
   saleForm!: FormGroup;
   submitting = false;
   currentStep = 1;
 
+  // Catégories
   categories: any[] = [];
   mainCategories: any[] = [];
   filteredSubcategories: any[] = [];
 
-  // Gestion des images
+  // Images
   images: File[] = [];
   imagePreviews: string[] = [];
 
-  // Utilisateur connecté (artisan)
+  // Utilisateur connecté
   currentUserId: string | null = null;
 
   constructor(
@@ -34,6 +36,7 @@ export class SaleComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // Init form
     this.saleForm = this.fb.group({
       title: ['', Validators.required],
       category: [null, Validators.required],
@@ -43,18 +46,15 @@ export class SaleComponent implements OnInit {
       description: ['', Validators.required]
     });
 
-    // Récupérer toutes les catégories
+    // Charger catégories
     await this.loadCategories();
 
-    // Récupérer l'utilisateur connecté
+    // Récupération utilisateur connecté
     const user = await this.supabaseService.getUser();
-    if (user) {
-      this.currentUserId = user.id;
-    } else {
-      console.warn('Aucun utilisateur connecté. Artisan_id sera null.');
-    }
+    if (user) this.currentUserId = user.id;
+    else console.warn('Aucun utilisateur connecté : artisan_id sera null');
 
-    // Préparer 10 slots d'images (max)
+    // Slots de preview
     this.initPreviewArray();
   }
 
@@ -63,46 +63,41 @@ export class SaleComponent implements OnInit {
       .from('Category')
       .select('*');
     if (error) {
-      console.error('Erreur de chargement des catégories:', error.message);
+      console.error('Erreur chargement catégories :', error.message);
       return;
     }
-
     this.categories = data ?? [];
-    this.mainCategories = this.categories.filter((cat) => cat.parent_id === null);
+    this.mainCategories = this.categories.filter(cat => cat.parent_id === null);
   }
 
   onCategoryChange() {
     const selectedCategoryId = Number(this.saleForm.get('category')?.value);
     this.filteredSubcategories = this.categories.filter(
-      (cat) => cat.parent_id === selectedCategoryId
+      cat => cat.parent_id === selectedCategoryId
     );
     this.saleForm.patchValue({ subcategory: null });
   }
 
-  // Navigation étapes
+  // Navigation multi-étapes
   goToStep(stepNumber: number) {
-    // Étape 1 -> Étape 2
     if (this.currentStep === 1 && stepNumber === 2 && !this.isStep1Valid()) return;
-
-    // Étape 2 -> Étape 3
     if (this.currentStep === 2 && stepNumber === 3 && !this.isStep2Valid()) return;
-
     this.currentStep = stepNumber;
   }
 
   isStep1Valid(): boolean {
-    return this.saleForm.get('title')!.valid &&
-      this.saleForm.get('category')!.valid &&
-      this.saleForm.get('subcategory')!.valid &&
-      this.saleForm.get('condition')!.valid;
+    return !!this.saleForm.get('title')?.valid &&
+      !!this.saleForm.get('category')?.valid &&
+      !!this.saleForm.get('subcategory')?.valid &&
+      !!this.saleForm.get('condition')?.valid;
   }
 
   isStep2Valid(): boolean {
-    return this.saleForm.get('price')!.valid &&
-      this.saleForm.get('description')!.valid;
+    return !!this.saleForm.get('price')?.valid &&
+      !!this.saleForm.get('description')?.valid;
   }
 
-  // Pour gérer 10 slots images
+  // Prévisualisation
   initPreviewArray() {
     this.imagePreviews = Array(10).fill(null);
   }
@@ -117,25 +112,23 @@ export class SaleComponent implements OnInit {
 
     const newFiles = Array.from(input.files);
 
-    // Vérification 10 max
+    // Limiter à 10 images
     if (this.images.length + newFiles.length > 10) {
-      alert('Max 10 images autorisées.');
+      alert('Vous ne pouvez sélectionner que 10 images maximum.');
       return;
     }
 
     this.images.push(...newFiles);
     this.updatePreviews();
-
-    // reset input
-    input.value = '';
+    input.value = ''; // reset
   }
 
   updatePreviews() {
     this.initPreviewArray();
-    this.images.forEach((file, index) => {
+    this.images.forEach((file, idx) => {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.imagePreviews[index] = e.target.result as string;
+        this.imagePreviews[idx] = e.target.result as string;
       };
       reader.readAsDataURL(file);
     });
@@ -153,22 +146,21 @@ export class SaleComponent implements OnInit {
       console.error('Formulaire invalide');
       return;
     }
-
     this.submitting = true;
 
     try {
       // 1) Upload images
       const imageUrls: string[] = [];
       for (const file of this.images) {
-        const url = await this.uploadImageToSupabase(file);
-        if (url) imageUrls.push(url);
+        const uploadedUrl = await this.uploadImageToSupabase(file);
+        if (uploadedUrl) imageUrls.push(uploadedUrl);
       }
 
-      // 2) Insertion dans Ad
+      // 2) Insérer dans Ad
       const formData = this.saleForm.value;
       const now = new Date();
 
-      // ad_id doit être unique => on utilise Date.now()
+      // Générer un ID unique
       const adId = Date.now();
 
       const { data, error } = await this.supabaseService.client
@@ -179,21 +171,20 @@ export class SaleComponent implements OnInit {
           description: formData.description,
           publication_date: now.toISOString(),
           price: formData.price,
-          quantity: 1,              // par défaut 1
+          quantity: 1,
           status: 'Available',
-          location: null,          // ou un champ si besoin
-          material_id: null,       // si besoin
+          location: null,
+          material_id: null,
           artisan_id: this.currentUserId, // utilisateur connecté
           category_id: formData.subcategory,
-          images: imageUrls        // Array de strings, stocké en JSONB
+          images: imageUrls
         })
         .select();
 
       if (error) {
         throw new Error(error.message);
       }
-
-      console.log('Annonce ajoutée avec succès :', data);
+      console.log('Annonce ajoutée avec succès !', data);
 
       // 3) Reset
       this.saleForm.reset();
@@ -208,12 +199,13 @@ export class SaleComponent implements OnInit {
     this.submitting = false;
   }
 
+  // Upload vers le bucket 'ad-images'
   async uploadImageToSupabase(file: File): Promise<string | null> {
     try {
       const filePath = `ad-images/${Date.now()}-${file.name}`;
       const { error } = await this.supabaseService.client
         .storage
-        .from('ad-images')
+        .from('ad-images')  // Ton bucket déjà configuré
         .upload(filePath, file, { upsert: true });
 
       if (error) {
@@ -221,12 +213,14 @@ export class SaleComponent implements OnInit {
         return null;
       }
 
+      // Récupération de l'URL publique
       const { data } = this.supabaseService.client
         .storage
         .from('ad-images')
         .getPublicUrl(filePath);
 
       return data?.publicUrl || null;
+
     } catch (err: any) {
       console.error('Exception upload:', err.message);
       return null;
