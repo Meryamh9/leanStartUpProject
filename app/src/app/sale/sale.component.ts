@@ -13,19 +13,20 @@ import { SupabaseService } from '../supabase.service';
 export class SaleComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // Formulaire
   saleForm!: FormGroup;
   submitting = false;
   currentStep = 1;
 
-  // Catégories
   categories: any[] = [];
   mainCategories: any[] = [];
   filteredSubcategories: any[] = [];
 
   // Gestion des images
-  images: File[] = [];            // Fichiers bruts
-  imagePreviews: string[] = [];   // URLs base64 (taille 10)
+  images: File[] = [];
+  imagePreviews: string[] = [];
+
+  // Utilisateur connecté (artisan)
+  currentUserId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -42,10 +43,18 @@ export class SaleComponent implements OnInit {
       description: ['', Validators.required]
     });
 
-    // Charger les catégories depuis Supabase
+    // Récupérer toutes les catégories
     await this.loadCategories();
 
-    // 10 emplacements possibles
+    // Récupérer l'utilisateur connecté
+    const user = await this.supabaseService.getUser();
+    if (user) {
+      this.currentUserId = user.id;
+    } else {
+      console.warn('Aucun utilisateur connecté. Artisan_id sera null.');
+    }
+
+    // Préparer 10 slots d'images (max)
     this.initPreviewArray();
   }
 
@@ -54,145 +63,146 @@ export class SaleComponent implements OnInit {
       .from('Category')
       .select('*');
     if (error) {
-      console.error('Erreur chargement catégories:', error.message);
+      console.error('Erreur de chargement des catégories:', error.message);
       return;
     }
 
-    this.categories = data || [];
-    this.mainCategories = this.categories.filter(cat => cat.parent_id === null);
+    this.categories = data ?? [];
+    this.mainCategories = this.categories.filter((cat) => cat.parent_id === null);
   }
 
-  // Changement de catégorie => recalcul des sous-catégories
   onCategoryChange() {
     const selectedCategoryId = Number(this.saleForm.get('category')?.value);
-    this.filteredSubcategories = this.categories.filter(cat => Number(cat.parent_id) === selectedCategoryId);
-    this.saleForm.get('subcategory')?.setValue(null);
+    this.filteredSubcategories = this.categories.filter(
+      (cat) => cat.parent_id === selectedCategoryId
+    );
+    this.saleForm.patchValue({ subcategory: null });
   }
 
-  // Contrôler la navigation entre les étapes
+  // Navigation étapes
   goToStep(stepNumber: number) {
-    if (this.currentStep === 1 && stepNumber === 2 && !this.isStep1Valid()) {
-      return;
-    }
-    if (this.currentStep === 2 && stepNumber === 3 && !this.isStep2Valid()) {
-      return;
-    }
+    // Étape 1 -> Étape 2
+    if (this.currentStep === 1 && stepNumber === 2 && !this.isStep1Valid()) return;
+
+    // Étape 2 -> Étape 3
+    if (this.currentStep === 2 && stepNumber === 3 && !this.isStep2Valid()) return;
+
     this.currentStep = stepNumber;
   }
 
   isStep1Valid(): boolean {
-    return !!this.saleForm.get('title')?.valid
-      && !!this.saleForm.get('category')?.valid
-      && !!this.saleForm.get('subcategory')?.valid
-      && !!this.saleForm.get('condition')?.valid;
+    return this.saleForm.get('title')!.valid &&
+      this.saleForm.get('category')!.valid &&
+      this.saleForm.get('subcategory')!.valid &&
+      this.saleForm.get('condition')!.valid;
   }
 
   isStep2Valid(): boolean {
-    return !!this.saleForm.get('price')?.valid
-      && !!this.saleForm.get('description')?.valid;
+    return this.saleForm.get('price')!.valid &&
+      this.saleForm.get('description')!.valid;
   }
 
-  // Prépare un tableau de 10 places vides
+  // Pour gérer 10 slots images
   initPreviewArray() {
     this.imagePreviews = Array(10).fill(null);
   }
 
-  // Ouvrir l'explorateur de fichiers
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
-  // Quand on sélectionne un ou plusieurs fichiers
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
     const newFiles = Array.from(input.files);
 
-    // On vérifie le total
+    // Vérification 10 max
     if (this.images.length + newFiles.length > 10) {
-      alert('Vous ne pouvez sélectionner que 10 images maximum.');
+      alert('Max 10 images autorisées.');
       return;
     }
 
-    // On ajoute les nouveaux fichiers
     this.images.push(...newFiles);
-
-    // On met à jour les previews
     this.updatePreviews();
 
-    // On réinitialise l'input
+    // reset input
     input.value = '';
   }
 
   updatePreviews() {
-    // Tout remettre à null
     this.initPreviewArray();
-
-    // Relecture des fichiers existants
-    this.images.forEach((file, idx) => {
+    this.images.forEach((file, index) => {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.imagePreviews[idx] = e.target.result as string;
+        this.imagePreviews[index] = e.target.result as string;
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // Supprimer une image
   removeImage(index: number, event: MouseEvent) {
-    // Empêche l'éventuel clic sur l'image ou la case
     event.stopPropagation();
-
-    // Retirer le fichier correspondant
     this.images.splice(index, 1);
-
-    // Mettre à jour les previews
     this.updatePreviews();
   }
 
   // Soumission finale
   async submitForm() {
-    if (this.saleForm.invalid) return;
+    if (this.saleForm.invalid) {
+      console.error('Formulaire invalide');
+      return;
+    }
+
     this.submitting = true;
 
     try {
-      // 1) Upload des fichiers dans Supabase
+      // 1) Upload images
       const imageUrls: string[] = [];
       for (const file of this.images) {
-        const uploadedUrl = await this.uploadImageToSupabase(file);
-        if (uploadedUrl) {
-          imageUrls.push(uploadedUrl);
-        }
+        const url = await this.uploadImageToSupabase(file);
+        if (url) imageUrls.push(url);
       }
 
-      // 2) Insertion dans la table Ad
+      // 2) Insertion dans Ad
       const formData = this.saleForm.value;
+      const now = new Date();
+
+      // ad_id doit être unique => on utilise Date.now()
+      const adId = Date.now();
+
       const { data, error } = await this.supabaseService.client
         .from('Ad')
         .insert({
+          ad_id: adId,
           title: formData.title,
-          category_id: formData.subcategory,
-          price: formData.price,
           description: formData.description,
+          publication_date: now.toISOString(),
+          price: formData.price,
+          quantity: 1,              // par défaut 1
           status: 'Available',
-          publication_date: new Date().toISOString(),
-          images: imageUrls // Stocké dans un champ text[] ou jsonb
+          location: null,          // ou un champ si besoin
+          material_id: null,       // si besoin
+          artisan_id: this.currentUserId, // utilisateur connecté
+          category_id: formData.subcategory,
+          images: imageUrls        // Array de strings, stocké en JSONB
         })
         .select();
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        throw new Error(error.message);
+      }
 
-      console.log('Annonce ajoutée avec succès !', data);
+      console.log('Annonce ajoutée avec succès :', data);
 
-      // 3) Nettoyage
+      // 3) Reset
       this.saleForm.reset();
       this.images = [];
       this.initPreviewArray();
       this.currentStep = 1;
 
     } catch (err: any) {
-      console.error('Erreur :', err.message);
+      console.error('Erreur lors de la création de l\'annonce :', err.message);
     }
 
     this.submitting = false;
@@ -201,21 +211,24 @@ export class SaleComponent implements OnInit {
   async uploadImageToSupabase(file: File): Promise<string | null> {
     try {
       const filePath = `ad-images/${Date.now()}-${file.name}`;
-      const { data, error } = await this.supabaseService.client
+      const { error } = await this.supabaseService.client
         .storage
         .from('ad-images')
         .upload(filePath, file, { upsert: true });
+
       if (error) {
-        console.error('Erreur upload Supabase:', error.message);
+        console.error('Erreur upload image:', error.message);
         return null;
       }
-      const { data: publicUrlData } = this.supabaseService.client
+
+      const { data } = this.supabaseService.client
         .storage
         .from('ad-images')
         .getPublicUrl(filePath);
-      return publicUrlData?.publicUrl || null;
+
+      return data?.publicUrl || null;
     } catch (err: any) {
-      console.error('Erreur upload:', err.message);
+      console.error('Exception upload:', err.message);
       return null;
     }
   }
