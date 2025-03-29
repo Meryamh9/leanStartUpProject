@@ -1,13 +1,17 @@
 <div class="card-container">
-    <mat-card *ngFor="let card of cards" class="example-card">
-      <img mat-card-image [src]="card.image" [alt]="card.title" />
-      <mat-card-content>
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>{{ card.title }}</mat-card-title>
-            <mat-card-subtitle>{{ card.location }}</mat-card-subtitle>
-          </mat-card-header>
-        <p class="price">{{ card.price }}€</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <mat-card *ngFor="let card of dataSource.connect() | async" class="example-card" [routerLink]="['/produit', 'product-detail', card.id]">
+    <img mat-card-image [src]="card.image" [alt]="card.title" />
+    <mat-card-content>
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{ card.title }}</mat-card-title>
+        <mat-card-subtitle>{{ card.location }}</mat-card-subtitle>
+      </mat-card-header>
+      <p class="price">{{ card.price }}€</p>
+      <mat-icon class="bookmark">bookmark_border</mat-icon>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Paginator -->
+<mat-paginator class="pagination" [pageSizeOptions]="[12, 24, 48]" showFirstLastButtons></mat-paginator>

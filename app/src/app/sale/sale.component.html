@@ -1,1 +1,86 @@
-<p>sale works!</p>
+<div class="sale-container">
+  <h2>Créer une annonce</h2>
+
+  <form [formGroup]="saleForm" (ngSubmit)="submitForm()">
+    <!-- Étape 1 -->
+    <div *ngIf="currentStep === 1">
+      <label for="title">Titre de l'annonce</label>
+      <input id="title" formControlName="title" type="text" placeholder="Ex: Grande table en bois 8 personnes" />
+
+      <label for="category">Catégorie principale</label>
+      <select id="category" formControlName="category" (change)="onCategoryChange()">
+        <option value="">Sélectionnez une catégorie</option>
+        <option *ngFor="let cat of mainCategories" [value]="cat.id">{{ cat.name }}</option>
+      </select>
+
+      <label for="subcategory">Sous-catégorie</label>
+      <select id="subcategory" formControlName="subcategory">
+        <option value="">Sélectionnez une sous-catégorie</option>
+        <option *ngFor="let sub of filteredSubcategories" [value]="sub.id">{{ sub.name }}</option>
+      </select>
+
+      <label for="condition">État</label>
+      <input id="condition" formControlName="condition" type="text" placeholder="Ex: Presque neuf" />
+
+      <button type="button" (click)="goToStep(2)">Suivant</button>
+    </div>
+
+    <!-- Étape 2 -->
+    <div *ngIf="currentStep === 2" class="slide-in-right">
+      <label for="price">Prix (€)</label>
+      <input id="price" formControlName="price" type="number" min="0" placeholder="Ex: 40" />
+
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" placeholder="Décrivez votre article"></textarea>
+
+      <button type="button" (click)="goToStep(1)">Précédent</button>
+      <button type="button" (click)="goToStep(3)">Suivant</button>
+    </div>
+
+    <!-- Étape 3 : Photos -->
+    <div *ngIf="currentStep === 3" class="slide-in-right">
+      <label>Ajoutez jusqu'à 10 photos</label>
+
+      <div class="photos-container">
+        <div class="photo-tile" *ngFor="let preview of imagePreviews; let i = index">
+
+          <!-- Si on a déjà une preview, on l'affiche -->
+          <ng-container *ngIf="preview; else emptyTile">
+            <img [src]="preview" alt="preview" />
+            <button
+              class="remove-button"
+              (click)="removeImage(i, $event)"
+            >x</button>
+          </ng-container>
+
+          <!-- Sinon, on affiche un plus cliquable pour ajouter -->
+          <ng-template #emptyTile>
+            <div class="plus-sign" (click)="triggerFileInput()">
+              +
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Input file multiple (caché) -->
+      <input
+        #fileInput
+        type="file"
+        multiple
+        accept="image/*"
+        (change)="onFileSelect($event)"
+        style="display: none"
+      />
+
+      <p *ngIf="images.length > 0">
+        Photos sélectionnées : {{ images.length }}
+      </p>
+
+      <button type="button" (click)="goToStep(2)">Précédent</button>
+      <button type="submit" [disabled]="submitting">
+        {{ submitting ? 'Envoi...' : 'Publier l\'annonce' }}
+      </button>
+    </div>
+
+  </form>
+</div>
