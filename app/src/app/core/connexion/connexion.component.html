@@ -1,29 +1,76 @@
-<div *ngIf="message" class="alert alert-warning">
-  {{ message }}
-</div>
-<div class="connexion-container">
-  <h2>Connexion</h2>
-  <form (ngSubmit)="signIn()">
-    <label for="email">Adresse email :</label>
-    <input
-      id="email"
-      type="email"
-      [(ngModel)]="email"
-      name="email"
-      placeholder="Entrez votre email"
-      required
-    />
 
-    <label for="password">Mot de passe :</label>
-    <input
-      id="password"
-      type="password"
-      [(ngModel)]="password"
-      name="password"
-      placeholder="Entrez votre mot de passe"
-      required
-    />
+<div class="login-page">
+  <div class="login-container">
+    <div class="form-section">
+      <h1>Connexion</h1>
+      <form class="login-form" (ngSubmit)="signIn()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>e-mail</mat-label>
+          <input
+            id="email"
+            matInput
+            type="email"
+            placeholder="example@email.com"
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
+        </mat-form-field>
 
-    <button type="submit">Se connecter</button>
-  </form>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mot de passe</mat-label>
+          <input
+            id="password"
+            matInput
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+        </mat-form-field>
+
+        <a class="forgot-password">Mot de passe oublié ?</a>
+
+        <div class="separator">---</div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="login-btn"
+          type="submit"
+        >
+          Se connecter
+        </button>
+
+        <div class="or-divider">
+          <span class="or-text">Ou</span>
+        </div>
+
+        <button mat-stroked-button class="social-btn" type="button">
+          <img
+            src="../assets/images/google.png"
+            alt="Google"
+            class="social-icon"
+          />
+          Se connecter avec Google
+        </button>
+
+        <button mat-stroked-button class="social-btn" type="button">
+          <img
+            src="../assets/images/fb.png"
+            alt="Facebook"
+            class="social-icon"
+          />
+          Se connecter avec Facebook
+        </button>
+      </form>
+
+      <div class="signup-link">
+        Vous n'avez pas de compte ?
+        <a [routerLink]="['/inscription']">Inscrivez-vous !</a>
+      </div>
+    </div>
+
+    <div class="image-section"></div>
+  </div>
 </div>
