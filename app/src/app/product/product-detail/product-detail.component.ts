@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { SupabaseService } from '../../supabase.service';
 import { CommonModule } from '@angular/common';
+import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
   selector: 'app-product-detail',

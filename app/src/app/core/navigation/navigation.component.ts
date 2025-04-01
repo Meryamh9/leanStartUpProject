@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SupabaseService } from '../../supabase.service';
 import { CommonModule } from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -7,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import { SupabaseService } from '../services/supabase.service';
 
 @Component({
   selector: 'app-navigation',

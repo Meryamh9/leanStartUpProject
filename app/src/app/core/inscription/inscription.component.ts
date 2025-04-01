@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { SupabaseService } from '../../supabase.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import { ErrorStateMatcher } from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
+import { SupabaseService } from '../services/supabase.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

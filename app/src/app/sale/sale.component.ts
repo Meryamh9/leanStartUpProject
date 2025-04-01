@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SupabaseService } from '../supabase.service';
+import { SupabaseService } from '../core/services/supabase.service';
 
 @Component({
   selector: 'app-sale',

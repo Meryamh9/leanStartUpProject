@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SupabaseService } from '../../../supabase.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-profile',
