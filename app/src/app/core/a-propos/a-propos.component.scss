@@ -1,0 +1,31 @@
+/* Reset des marges et padding */
+:host, body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.about-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.company-section {
+  margin: 0;
+  padding: 0;
+}
+
+.company-images {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.company-images img {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
