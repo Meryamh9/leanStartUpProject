@@ -227,3 +227,6 @@ export class SaleComponent implements OnInit {
     }
   }
 }
+
+
+// TODO A AJOUTER L'AJOUT DE L'ANNONC CORRECTEMENT COTE BDD
